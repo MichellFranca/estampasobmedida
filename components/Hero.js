@@ -1,4 +1,6 @@
-export default function Hero() {
+import Link from "next/link";
+
+export default function Hero({ onOpenStudio }) {
   return (
     <div className="relative h-screen flex items-center justify-start px-6 md:px-20 overflow-hidden bg-black">
       {/* VÍDEO EM LOOP (O Motor Visual) */}
@@ -36,12 +38,18 @@ export default function Hero() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <button className="bg-[var(--primary-color)] text-black px-8 py-4 font-black uppercase text-sm hover:bg-white hover:scale-105 transition-all">
+          <button
+            onClick={onOpenStudio}
+            className="bg-[var(--primary-color)] text-black px-8 py-4 font-black uppercase text-sm hover:bg-white hover:scale-105 transition-all text-center"
+          >
             Personalizar Agora
           </button>
-          <button className="bg-transparent border border-white text-white px-8 py-4 font-bold uppercase text-sm hover:bg-white hover:text-black transition-colors">
+          <Link
+            href="/colecao"
+            className="bg-transparent border border-white text-white px-8 py-4 font-bold uppercase text-sm hover:bg-white hover:text-black transition-colors text-center"
+          >
             Ver Coleção
-          </button>
+          </Link>
         </div>
       </div>
     </div>
