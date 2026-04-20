@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+:root {
+  /* As Cores da Nova Logo */
+  --primary-color: #f57c00; /* Laranja da fita métrica e 'sob medida' */
+  --secondary-color: #1a237e; /* Azul Marinho do texto 'Estampa' */
+  --accent-purple: #673ab7; /* Roxo do cabo do pincel */
+
+  /* Atmosfera Dark Premium (Azul noturno em vez de preto) */
+  --background-dark: #0b0f19; /* Fundo principal escuro */
+  --background-card: #131b2f; /* Fundo das seções um tom mais claro */
+  --border-color: #1e293b; /* Linhas de divisão mais suaves */
+
+  --text-main: #f8fafc;
+  --font-main: "Inter", sans-serif;
+}
+
+body {
+  background-color: var(--background-dark);
+  color: var(--text-main);
+  font-family: var(--font-main);
+}
