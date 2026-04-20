@@ -8,6 +8,7 @@ export default function Colecao() {
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // NOVO: Controle do menu de celular
 
   const {
     cart,
@@ -250,7 +251,7 @@ export default function Colecao() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-6 ml-auto">
+          <div className="flex items-center gap-4 md:gap-6 ml-auto">
             <button
               onClick={() => setIsCartOpen(true)}
               className="text-gray-300 hover:text-[var(--primary-color)] relative group"
@@ -280,9 +281,84 @@ export default function Colecao() {
             >
               Criar no Estúdio
             </Link>
+            {/* NOVO: Botão Hambúrguer para Celular */}
+            <button
+              className="md:hidden text-gray-300 hover:text-white"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <svg
+                className="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </nav>
+
+      {/* NOVO: GAVETA DO MENU MOBILE */}
+      <div
+        className={`fixed inset-0 bg-black/90 backdrop-blur-sm z-[80] transition-opacity duration-300 md:hidden ${isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+      <div
+        className={`fixed top-0 right-0 h-full w-[250px] bg-[var(--background-dark)] border-l border-[var(--border-color)] z-[90] transform transition-transform duration-500 shadow-2xl flex flex-col md:hidden ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="p-6 border-b border-[var(--border-color)] flex justify-between items-center">
+          <h3 className="text-lg font-black text-white uppercase tracking-widest">
+            Menu
+          </h3>
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="text-gray-400 hover:text-white"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className="flex flex-col p-6 space-y-6 text-sm font-bold uppercase tracking-widest text-gray-300">
+          <Link
+            href="/"
+            className="hover:text-[var(--primary-color)] transition-colors text-left"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Início
+          </Link>
+          <Link
+            href="/colecao"
+            className="text-[var(--primary-color)] transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Coleção
+          </Link>
+          <Link
+            href="/"
+            className="hover:text-[var(--primary-color)] transition-colors text-left"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Criar no Estúdio
+          </Link>
+        </div>
+      </div>
 
       <div
         className={`fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isCartOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
@@ -660,7 +736,6 @@ export default function Colecao() {
         </div>
       )}
 
-      {/* RODAPÉ ORIGINAL INTACTO */}
       <footer className="bg-[var(--background-card)] border-t border-[var(--border-color)] pt-16 pb-8">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-left">
           <div className="space-y-4">

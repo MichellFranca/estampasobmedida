@@ -8,6 +8,7 @@ import { useCart } from "../context/CartContext";
 
 export default function Home() {
   const [view, setView] = useState("home");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // NOVO: Controle do menu de celular
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity } =
     useCart();
 
@@ -111,7 +112,11 @@ export default function Home() {
       </a>
 
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-[var(--background-dark)]/95 backdrop-blur-md border-b border-[var(--border-color)] py-3 shadow-2xl" : "bg-transparent py-6"}`}
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          isScrolled
+            ? "bg-[var(--background-dark)]/95 backdrop-blur-md border-b border-[var(--border-color)] py-3 shadow-2xl"
+            : "bg-transparent py-6"
+        }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <div
@@ -145,7 +150,7 @@ export default function Home() {
               Drops
             </button>
           </div>
-          <div className="flex items-center gap-6 ml-auto">
+          <div className="flex items-center gap-4 md:gap-6 ml-auto">
             <button
               onClick={() => setIsCartOpen(true)}
               className="text-gray-300 hover:text-[var(--primary-color)] relative group"
@@ -175,9 +180,88 @@ export default function Home() {
             >
               Criar Agora
             </button>
+            {/* NOVO: Botão Hambúrguer para Celular */}
+            <button
+              className="md:hidden text-gray-300 hover:text-white"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <svg
+                className="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </nav>
+
+      {/* NOVO: GAVETA DO MENU MOBILE */}
+      <div
+        className={`fixed inset-0 bg-black/90 backdrop-blur-sm z-[80] transition-opacity duration-300 md:hidden ${isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+      <div
+        className={`fixed top-0 right-0 h-full w-[250px] bg-[var(--background-dark)] border-l border-[var(--border-color)] z-[90] transform transition-transform duration-500 shadow-2xl flex flex-col md:hidden ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="p-6 border-b border-[var(--border-color)] flex justify-between items-center">
+          <h3 className="text-lg font-black text-white uppercase tracking-widest">
+            Menu
+          </h3>
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="text-gray-400 hover:text-white"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className="flex flex-col p-6 space-y-6 text-sm font-bold uppercase tracking-widest text-gray-300">
+          <button
+            onClick={() => {
+              setView("home");
+              setIsMobileMenuOpen(false);
+            }}
+            className="text-left hover:text-[var(--primary-color)] transition-colors"
+          >
+            Início
+          </button>
+          <Link
+            href="/colecao"
+            className="hover:text-[var(--primary-color)] transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Coleção
+          </Link>
+          <button
+            onClick={() => {
+              setView("studio");
+              setIsMobileMenuOpen(false);
+            }}
+            className="text-left text-[var(--primary-color)] hover:text-white transition-colors"
+          >
+            Criar no Estúdio
+          </button>
+        </div>
+      </div>
 
       <div
         className={`fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isCartOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
@@ -209,6 +293,7 @@ export default function Home() {
             </svg>
           </button>
         </div>
+
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {cart.length === 0 ? (
             <div className="text-center py-20 text-gray-500 font-bold uppercase text-xs tracking-widest">
@@ -272,6 +357,7 @@ export default function Home() {
             ))
           )}
         </div>
+
         {cart.length > 0 && (
           <div className="p-6 border-t border-[var(--border-color)] bg-[var(--background-card)]">
             <div className="flex justify-between items-center mb-6">
@@ -295,9 +381,9 @@ export default function Home() {
       <main className="flex-grow">
         {view === "home" ? (
           <>
-            <Hero />
+            {/* LIGAMOS O HERO AO ESTÚDIO AQUI */}
+            <Hero onOpenStudio={() => setView("studio")} />
 
-            {/* FAIXA ROTATIVA STREETWEAR */}
             <div className="bg-[var(--primary-color)] text-[var(--background-dark)] py-3 overflow-hidden border-y border-[var(--primary-color)] relative z-10">
               <style jsx>{`
                 @keyframes marquee {
@@ -342,7 +428,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* SEÇÃO CARROSSEL COM BARRA DE ROLAGEM OCULTA E SETAS FLUTUANTES */}
             <section className="py-24 pl-6 md:pl-20 bg-[var(--background-card)] border-y border-[var(--border-color)]">
               <style jsx>{`
                 .no-scrollbar::-webkit-scrollbar {
@@ -365,7 +450,6 @@ export default function Home() {
               </div>
 
               <div className="relative group">
-                {/* BOTÃO ESQUERDA FLUTUANTE */}
                 <button
                   onClick={() => scrollCarousel("left")}
                   className="absolute left-2 md:left-6 top-[40%] z-20 w-14 h-14 bg-black/70 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-[var(--primary-color)] transition-all opacity-0 group-hover:opacity-100 shadow-2xl -translate-y-1/2"
@@ -416,7 +500,6 @@ export default function Home() {
                   ))}
                 </div>
 
-                {/* BOTÃO DIREITA FLUTUANTE COM ANIMAÇÃO */}
                 <button
                   onClick={() => scrollCarousel("right")}
                   className="absolute right-8 md:right-24 top-[40%] z-20 w-14 h-14 bg-[var(--primary-color)] text-white rounded-full flex items-center justify-center hover:bg-white hover:text-[var(--primary-color)] transition-all shadow-[0_0_20px_rgba(242,101,34,0.6)] -translate-y-1/2 animate-pulse group-hover:animate-none"
