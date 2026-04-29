@@ -57,31 +57,31 @@ export default function Home() {
       id: 1,
       name: 'Camiseta "Neon Tag"',
       price: "R$ 129,00",
-      img: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=400&h=500&fit=crop",
+      img: "images/indexcamisa05.webp",
     },
     {
       id: 2,
       name: 'Caneca "Matte Dark"',
       price: "R$ 59,00",
-      img: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?q=80&w=400&h=500&fit=crop",
+      img: "images/indexcaneca01.webp",
     },
     {
       id: 3,
       name: 'Moletom "Urban Box"',
       price: "R$ 249,00",
-      img: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=400&h=500&fit=crop",
+      img: "images/indexcamisa04.webp",
     },
     {
       id: 4,
-      name: 'Camiseta "Ghost"',
+      name: 'Camiseta "Hulk Esmaga"',
       price: "R$ 119,00",
-      img: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=400&h=500&fit=crop",
+      img: "images/hulkesmaga.webp",
     },
     {
       id: 5,
       name: 'Caneca "Graffiti"',
       price: "R$ 65,00",
-      img: "https://images.unsplash.com/photo-1578784157147-3806a090b833?q=80&w=400&h=500&fit=crop",
+      img: "images/indexcaneca02.webp",
     },
   ];
 
