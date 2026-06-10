@@ -225,9 +225,9 @@ export default function Colecao() {
             className="cursor-pointer flex items-center gap-3 group"
           >
             <img
-              src="/images/logo.png"
+              src="/images/logoestampasobmediasite.svg"
               alt="Logo Estampa sob medida"
-              className="h-16 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+              className="h-46 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
               onError={(e) => {
                 e.target.src =
                   "https://placehold.co/200x60/1A237E/FFFFFF?text=Logo+Aqui";
@@ -741,9 +741,9 @@ export default function Colecao() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <img
-                src="/images/logo.png"
+                src="images/logoestampasobmediasite.svg"
                 alt="Logo Estampa sob medida"
-                className="h-12 w-auto object-contain"
+                className="h-48 w-auto object-contain"
                 onError={(e) => {
                   e.target.src =
                     "https://placehold.co/200x60/1A237E/FFFFFF?text=Logo+Aqui";
