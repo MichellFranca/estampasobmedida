@@ -125,8 +125,8 @@ export default function Home() {
           >
             <img
               src="/images/logoestampasobmediasite.svg"
-              alt="Logo"
-              className="h-46 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+              alt="Logo Estampa sob medida"
+              className="h-20 md:h-28 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
               onError={(e) => {
                 e.target.src =
                   "https://placehold.co/200x60/1A237E/FFFFFF?text=Logo+Aqui";
@@ -537,7 +537,7 @@ export default function Home() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[150px] md:auto-rows-[250px]">
                   <div className="col-span-2 row-span-2 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
                     <img
-                      src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop"
+                      src="images/homersimpson.png"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       alt="Streetwear Colorido"
                     />
@@ -556,7 +556,7 @@ export default function Home() {
                   </div>
                   <div className="col-span-1 row-span-2 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
                     <img
-                      src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=600&auto=format&fit=crop"
+                      src="images/bart.png"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       alt="Cores"
                     />
@@ -570,7 +570,7 @@ export default function Home() {
                   </div>
                   <div className="col-span-2 row-span-1 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
                     <img
-                      src="https://images.unsplash.com/photo-1550614000-4b95d4ed79ea?q=80&w=800&auto=format&fit=crop"
+                      src="images/bart.png"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       alt="Neon Lifestyle"
                     />

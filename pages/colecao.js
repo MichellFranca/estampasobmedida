@@ -188,7 +188,7 @@ export default function Colecao() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--background-dark)] flex flex-col pt-24">
+    <div className="min-h-screen bg-[var(--background-dark)] flex flex-col pt-40">
       <Head>
         <title>Coleção Completa | Estampa sob medida</title>
       </Head>
@@ -227,7 +227,7 @@ export default function Colecao() {
             <img
               src="/images/logoestampasobmediasite.svg"
               alt="Logo Estampa sob medida"
-              className="h-46 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+              className="h-20 md:h-28 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
               onError={(e) => {
                 e.target.src =
                   "https://placehold.co/200x60/1A237E/FFFFFF?text=Logo+Aqui";
