@@ -21,20 +21,39 @@ export default function Home() {
 
   const handleWhatsAppCheckout = () => {
     const seuNumeroWhatsApp = "5571999092470";
+
+    // 1. CAPTURA DE INTELIGÊNCIA DE TRÁFEGO PAGO
+    // Lê os parâmetros da URL para identificar a origem do clique
+    const urlParams = new URLSearchParams(window.location.search);
+    const origem = urlParams.get("utm_source") || "Orgânico/Direto";
+    const campanha = urlParams.get("utm_campaign") || "N/A";
+
+    // Só formata o texto de rastreio se não for tráfego orgânico
+    const rastreioTexto =
+      origem !== "Orgânico/Direto"
+        ? `%0A%0A_(Origem do Cliente: ${origem} | Campanha: ${campanha})_`
+        : "";
+
+    // 2. MONTAGEM DO CABEÇALHO DA MENSAGEM
     let mensagem = "*PEDIDO MULTI-ITENS - ESTAMPA SOB MEDIDA*%0A%0A";
+
+    // 3. INSERÇÃO DOS ITENS DO CARRINHO
     cart.forEach((item, index) => {
       let extras = "";
       if (item.size) extras += ` | Tam: ${item.size}`;
       if (item.color) extras += ` | Cor: ${item.color}`;
       if (item.clientData)
         extras += `%0A   *Atenção:* ${item.clientData} (Arte no chat)`;
+
       mensagem += `${index + 1}. *${item.name}*%0A   Qtd: ${item.quantity} | Valor: ${item.price}${extras}%0A%0A`;
     });
-    mensagem += `*TOTAL DO PEDIDO:* R$ ${total.toFixed(2).replace(".", ",")}%0A%0APodemos confirmar os dados de pagamento e entrega?`;
-    window.open(
-      `https://wa.me/${seuNumeroWhatsApp}?text=${mensagem}`,
-      "_blank",
-    );
+
+    // 4. FECHAMENTO COM TOTAL E RASTREIO INVISÍVEL
+    mensagem += `*TOTAL DO PEDIDO:* R$ ${total.toFixed(2).replace(".", ",")}%0A%0APodemos confirmar os dados de pagamento e entrega?${rastreioTexto}`;
+
+    // 5. REDIRECIONAMENTO PARA O WHATSAPP
+    const url = `https://wa.me/${seuNumeroWhatsApp}?text=${mensagem}`;
+    window.open(url, "_blank");
   };
 
   const [isScrolled, setIsScrolled] = useState(false);
