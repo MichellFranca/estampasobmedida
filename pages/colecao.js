@@ -2,13 +2,14 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image"; // O motor de otimização de imagens
 import { useCart } from "../context/CartContext";
 
 export default function Colecao() {
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // NOVO: Controle do menu de celular
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const {
     cart,
@@ -35,22 +36,17 @@ export default function Colecao() {
   const handleWhatsAppCheckout = () => {
     const seuNumeroWhatsApp = "5571999092470";
 
-    // 1. CAPTURA DE INTELIGÊNCIA DE TRÁFEGO PAGO
-    // Lê os parâmetros da URL para identificar a origem do clique
     const urlParams = new URLSearchParams(window.location.search);
     const origem = urlParams.get("utm_source") || "Orgânico/Direto";
     const campanha = urlParams.get("utm_campaign") || "N/A";
 
-    // Só formata o texto de rastreio se não for tráfego orgânico
     const rastreioTexto =
       origem !== "Orgânico/Direto"
         ? `%0A%0A_(Origem do Cliente: ${origem} | Campanha: ${campanha})_`
         : "";
 
-    // 2. MONTAGEM DO CABEÇALHO DA MENSAGEM
     let mensagem = "*PEDIDO MULTI-ITENS - ESTAMPA SOB MEDIDA*%0A%0A";
 
-    // 3. INSERÇÃO DOS ITENS DO CARRINHO
     cart.forEach((item, index) => {
       let extras = "";
       if (item.size) extras += ` | Tam: ${item.size}`;
@@ -61,14 +57,13 @@ export default function Colecao() {
       mensagem += `${index + 1}. *${item.name}*%0A   Qtd: ${item.quantity} | Valor: ${item.price}${extras}%0A%0A`;
     });
 
-    // 4. FECHAMENTO COM TOTAL E RASTREIO INVISÍVEL
     mensagem += `*TOTAL DO PEDIDO:* R$ ${total.toFixed(2).replace(".", ",")}%0A%0APodemos confirmar os dados de pagamento e entrega?${rastreioTexto}`;
 
-    // 5. REDIRECIONAMENTO PARA O WHATSAPP
     const url = `https://wa.me/${seuNumeroWhatsApp}?text=${mensagem}`;
     window.open(url, "_blank");
   };
 
+  // BANCO DE DADOS: Otimizado com a barra "/" em todos os caminhos locais
   const shirts = [
     {
       id: 1,
@@ -82,28 +77,28 @@ export default function Colecao() {
       category: "camisa",
       name: 'Camiseta "Urban Decay"',
       price: "R$ 119,00",
-      img: "images/camisa02.JPG",
+      img: "/images/camisa02.JPG",
     },
     {
       id: 3,
       category: "camisa",
       name: 'Camiseta "Neon Lines"',
       price: "R$ 139,00",
-      img: "images/camisa03.JPG",
+      img: "/images/camisa03.JPG",
     },
     {
       id: 4,
       category: "camisa",
       name: 'Camiseta "Dark Mode"',
       price: "R$ 129,00",
-      img: "images/camisa04.JPG",
+      img: "/images/camisa04.JPG",
     },
     {
       id: 5,
       category: "camisa",
       name: 'Camiseta "Street Tag"',
       price: "R$ 119,00",
-      img: "images/camisa05.JPG",
+      img: "/images/camisa05.JPG",
     },
     {
       id: 6,
@@ -209,6 +204,8 @@ export default function Colecao() {
       <Head>
         <title>Coleção Completa | Estampa sob medida</title>
       </Head>
+
+      {/* Botão Flutuante do WhatsApp */}
       <a
         href="https://wa.me/5571999092470?text=Olá! Preciso de ajuda com a coleção."
         target="_blank"
@@ -229,29 +226,24 @@ export default function Colecao() {
         </span>
       </a>
 
+      {/* Menu Principal (Navbar) */}
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-[var(--background-dark)]/95 backdrop-blur-md border-b border-[var(--border-color)] py-3 shadow-2xl"
-            : "bg-[var(--background-dark)] py-6 border-b border-[var(--border-color)]"
-        }`}
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-[var(--background-dark)]/95 backdrop-blur-md border-b border-[var(--border-color)] py-3 shadow-2xl" : "bg-[var(--background-dark)] py-6 border-b border-[var(--border-color)]"}`}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <Link
             href="/"
             className="cursor-pointer flex items-center gap-3 group"
           >
-            <img
+            <Image
               src="/images/logoestampasobmediasite.svg"
               alt="Logo Estampa sob medida"
+              width={250}
+              height={100}
+              priority={true}
               className="h-20 md:h-28 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
-              onError={(e) => {
-                e.target.src =
-                  "https://placehold.co/200x60/1A237E/FFFFFF?text=Logo+Aqui";
-              }}
             />
           </Link>
-
           <div className="hidden md:flex gap-8 text-[11px] font-bold uppercase tracking-widest text-gray-300 items-center ml-8">
             <Link
               href="/"
@@ -267,7 +259,6 @@ export default function Colecao() {
               NOVIDADES
             </Link>
           </div>
-
           <div className="flex items-center gap-4 md:gap-6 ml-auto">
             <button
               onClick={() => setIsCartOpen(true)}
@@ -298,7 +289,6 @@ export default function Colecao() {
             >
               Criar no Estúdio
             </Link>
-            {/* NOVO: Botão Hambúrguer para Celular */}
             <button
               className="md:hidden text-gray-300 hover:text-white"
               onClick={() => setIsMobileMenuOpen(true)}
@@ -321,7 +311,7 @@ export default function Colecao() {
         </div>
       </nav>
 
-      {/* NOVO: GAVETA DO MENU MOBILE */}
+      {/* Menu Mobile */}
       <div
         className={`fixed inset-0 bg-black/90 backdrop-blur-sm z-[80] transition-opacity duration-300 md:hidden ${isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={() => setIsMobileMenuOpen(false)}
@@ -377,6 +367,7 @@ export default function Colecao() {
         </div>
       </div>
 
+      {/* Gaveta do Carrinho (Mantendo tag <img> padrão para segurança contra cache) */}
       <div
         className={`fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isCartOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={() => setIsCartOpen(false)}
@@ -506,7 +497,7 @@ export default function Colecao() {
         </section>
 
         <div className="max-w-7xl mx-auto space-y-32 mb-32">
-          {/* CAMISAS */}
+          {/* CAMISAS (Otimizado com next/image) */}
           <section className="px-6">
             <h2 className="text-3xl font-black text-white uppercase tracking-tighter border-l-4 border-[var(--primary-color)] pl-4 mb-12">
               T-Shirts
@@ -517,11 +508,13 @@ export default function Colecao() {
                   key={p.id}
                   className="bg-[var(--background-card)] border border-[var(--border-color)] rounded-lg overflow-hidden group"
                 >
-                  <div className="aspect-[4/5] overflow-hidden">
-                    <img
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <Image
                       src={p.img}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in"
                       alt={p.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700 cursor-zoom-in"
                       onClick={() => setSelectedProduct(p)}
                     />
                   </div>
@@ -549,7 +542,7 @@ export default function Colecao() {
             </div>
           </section>
 
-          {/* CANECAS (Fundo Claro) */}
+          {/* CANECAS (Otimizado com next/image) */}
           <section className="bg-gray-100 py-24 -mx-6 px-6">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl font-black text-[var(--secondary-color)] uppercase tracking-tighter border-l-4 border-[var(--secondary-color)] pl-4 mb-12">
@@ -561,12 +554,18 @@ export default function Colecao() {
                     key={p.id}
                     className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex flex-col text-center"
                   >
-                    <img
-                      src={p.img}
-                      className="aspect-square object-cover rounded mb-4 cursor-zoom-in"
-                      alt={p.name}
+                    <div
+                      className="relative aspect-square mb-4 rounded overflow-hidden cursor-zoom-in"
                       onClick={() => setSelectedProduct(p)}
-                    />
+                    >
+                      <Image
+                        src={p.img}
+                        alt={p.name}
+                        fill
+                        sizes="(max-width: 768px) 50vw, 16vw"
+                        className="object-cover"
+                      />
+                    </div>
                     <h3 className="text-[var(--secondary-color)] font-bold text-xs truncate mb-2">
                       {p.name}
                     </h3>
@@ -588,7 +587,7 @@ export default function Colecao() {
             </div>
           </section>
 
-          {/* MOLETONS */}
+          {/* MOLETONS (Otimizado com next/image) */}
           <section className="px-6">
             <h2 className="text-3xl font-black text-white uppercase tracking-tighter border-l-4 border-[var(--accent-purple)] pl-4 mb-12">
               Moletons
@@ -599,10 +598,12 @@ export default function Colecao() {
                   key={p.id}
                   className="relative aspect-video rounded-xl overflow-hidden group border border-[var(--border-color)]"
                 >
-                  <img
+                  <Image
                     src={p.img}
-                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity cursor-zoom-in"
                     alt={p.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover opacity-80 group-hover:opacity-100 transition-opacity cursor-zoom-in"
                     onClick={() => setSelectedProduct(p)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-8 flex flex-col justify-end pointer-events-none">
@@ -631,18 +632,14 @@ export default function Colecao() {
         </div>
       </main>
 
-      {/* 2. MODAL DE "ESPIAR PRODUTO" (QUICK VIEW) */}
+      {/* MODAL DE "ESPIAR PRODUTO" (Mantendo tag <img> padrão) */}
       {selectedProduct && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6">
-          {/* Fundo escuro */}
           <div
             className="absolute inset-0 bg-black/90 backdrop-blur-md"
             onClick={() => setSelectedProduct(null)}
           ></div>
-
-          {/* Caixa do Modal */}
           <div className="relative bg-[var(--background-card)] border border-[var(--border-color)] w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl flex flex-col md:flex-row">
-            {/* Botão Fechar */}
             <button
               onClick={() => setSelectedProduct(null)}
               className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white transition-colors bg-black/20 p-2 rounded-full"
@@ -661,8 +658,6 @@ export default function Colecao() {
                 />
               </svg>
             </button>
-
-            {/* Lado Esquerdo: Imagem Gigante */}
             <div className="w-full md:w-1/2 bg-black flex items-center justify-center p-8">
               <img
                 src={selectedProduct.img}
@@ -670,8 +665,6 @@ export default function Colecao() {
                 className="max-w-full h-auto object-contain rounded-lg shadow-2xl"
               />
             </div>
-
-            {/* Lado Direito: Informações e Ação */}
             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col">
               <span className="text-[var(--primary-color)] font-black uppercase text-[10px] tracking-[0.3em] mb-2 block">
                 ✦ {selectedProduct.category} Exclusive
@@ -682,8 +675,6 @@ export default function Colecao() {
               <p className="text-2xl font-black text-white mb-6">
                 {selectedProduct.price}
               </p>
-
-              {/* SELETOR DE TAMANHO DENTRO DO MODAL (Só para roupas) */}
               {(selectedProduct.category === "camisa" ||
                 selectedProduct.category === "moletom") && (
                 <div className="mb-8">
@@ -703,7 +694,6 @@ export default function Colecao() {
                   </div>
                 </div>
               )}
-
               <div className="space-y-6 mb-10">
                 <div>
                   <h4 className="text-gray-500 font-bold uppercase text-[10px] tracking-widest mb-3 italic">
@@ -715,7 +705,6 @@ export default function Colecao() {
                     Acabamento reforçado e toque macio para o uso diário.
                   </p>
                 </div>
-
                 <div>
                   <h4 className="text-gray-500 font-bold uppercase text-[10px] tracking-widest mb-3 italic">
                     Envio e Entrega
@@ -726,7 +715,6 @@ export default function Colecao() {
                   </p>
                 </div>
               </div>
-
               <div className="mt-auto">
                 <button
                   onClick={() => {
@@ -758,7 +746,7 @@ export default function Colecao() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <img
-                src="images/logoestampasobmediasite.svg"
+                src="/images/logoestampasobmediasite.svg"
                 alt="Logo Estampa sob medida"
                 className="h-48 w-auto object-contain"
                 onError={(e) => {
@@ -772,7 +760,6 @@ export default function Colecao() {
               Brasil. Qualidade premium de fábrica direto para o seu estilo.
             </p>
           </div>
-
           <div>
             <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-6 text-[var(--primary-color)]">
               Institucional
@@ -786,7 +773,6 @@ export default function Colecao() {
               </li>
             </ul>
           </div>
-
           <div>
             <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-6 text-[var(--primary-color)]">
               Dúvidas
@@ -806,13 +792,10 @@ export default function Colecao() {
               </li>
             </ul>
           </div>
-
           <div>
             <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-6 text-[var(--primary-color)]">
               Pagamento & Segurança
             </h4>
-
-            {/* ÍCONES VISUAIS DE PAGAMENTO */}
             <div className="flex flex-wrap gap-2 mb-6">
               <div
                 title="Pix"
@@ -847,7 +830,6 @@ export default function Colecao() {
                 </svg>
               </div>
             </div>
-
             <div className="flex items-center gap-3 text-gray-400">
               <svg
                 className="w-5 h-5 text-green-500 shrink-0"
@@ -866,7 +848,6 @@ export default function Colecao() {
             </div>
           </div>
         </div>
-
         <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
           <p className="text-gray-500 text-[10px] font-medium uppercase tracking-widest">
             © 2026 ESTAMPA SOB MEDIDA LTDA | CNPJ: 00.000.000/0001-00 | CRIADO

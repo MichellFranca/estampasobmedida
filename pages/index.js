@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image"; // OTIMIZAÇÃO: Motor de imagens inteligente do Next.js
 import Hero from "../components/Hero";
 import ProductStudio from "../components/ProductStudio";
 import { useState, useEffect, useRef } from "react";
@@ -8,7 +8,7 @@ import { useCart } from "../context/CartContext";
 
 export default function Home() {
   const [view, setView] = useState("home");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // NOVO: Controle do menu de celular
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity } =
     useCart();
 
@@ -23,21 +23,17 @@ export default function Home() {
     const seuNumeroWhatsApp = "5571999092470";
 
     // 1. CAPTURA DE INTELIGÊNCIA DE TRÁFEGO PAGO
-    // Lê os parâmetros da URL para identificar a origem do clique
     const urlParams = new URLSearchParams(window.location.search);
     const origem = urlParams.get("utm_source") || "Orgânico/Direto";
     const campanha = urlParams.get("utm_campaign") || "N/A";
 
-    // Só formata o texto de rastreio se não for tráfego orgânico
     const rastreioTexto =
       origem !== "Orgânico/Direto"
         ? `%0A%0A_(Origem do Cliente: ${origem} | Campanha: ${campanha})_`
         : "";
 
-    // 2. MONTAGEM DO CABEÇALHO DA MENSAGEM
     let mensagem = "*PEDIDO MULTI-ITENS - ESTAMPA SOB MEDIDA*%0A%0A";
 
-    // 3. INSERÇÃO DOS ITENS DO CARRINHO
     cart.forEach((item, index) => {
       let extras = "";
       if (item.size) extras += ` | Tam: ${item.size}`;
@@ -48,10 +44,8 @@ export default function Home() {
       mensagem += `${index + 1}. *${item.name}*%0A   Qtd: ${item.quantity} | Valor: ${item.price}${extras}%0A%0A`;
     });
 
-    // 4. FECHAMENTO COM TOTAL E RASTREIO INVISÍVEL
     mensagem += `*TOTAL DO PEDIDO:* R$ ${total.toFixed(2).replace(".", ",")}%0A%0APodemos confirmar os dados de pagamento e entrega?${rastreioTexto}`;
 
-    // 5. REDIRECIONAMENTO PARA O WHATSAPP
     const url = `https://wa.me/${seuNumeroWhatsApp}?text=${mensagem}`;
     window.open(url, "_blank");
   };
@@ -71,36 +65,37 @@ export default function Home() {
     }
   };
 
+  // Caminhos corrigidos adicionando a barra "/" no início
   const carouselProducts = [
     {
       id: 1,
       name: 'Camiseta "Neon Tag"',
       price: "R$ 129,00",
-      img: "images/indexcamisa05.webp",
+      img: "/images/indexcamisa05.webp",
     },
     {
       id: 2,
       name: 'Caneca "Matte Dark"',
       price: "R$ 59,00",
-      img: "images/indexcaneca01.webp",
+      img: "/images/indexcaneca01.webp",
     },
     {
       id: 3,
       name: 'Moletom "Urban Box"',
       price: "R$ 249,00",
-      img: "images/indexcamisa04.webp",
+      img: "/images/indexcamisa04.webp",
     },
     {
       id: 4,
       name: 'Camiseta "Hulk Esmaga"',
       price: "R$ 119,00",
-      img: "images/hulkesmaga.webp",
+      img: "/images/hulkesmaga.webp",
     },
     {
       id: 5,
       name: 'Caneca "Graffiti"',
       price: "R$ 65,00",
-      img: "images/indexcaneca02.webp",
+      img: "/images/indexcaneca02.webp",
     },
   ];
 
@@ -142,14 +137,13 @@ export default function Home() {
             className="cursor-pointer flex items-center gap-3 group"
             onClick={() => setView("home")}
           >
-            <img
+            <Image
               src="/images/logoestampasobmediasite.svg"
               alt="Logo Estampa sob medida"
+              width={250}
+              height={100}
+              priority={true}
               className="h-20 md:h-28 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
-              onError={(e) => {
-                e.target.src =
-                  "https://placehold.co/200x60/1A237E/FFFFFF?text=Logo+Aqui";
-              }}
             />
           </div>
           <div className="hidden md:flex gap-8 text-[11px] font-bold uppercase tracking-widest text-gray-300 items-center ml-8">
@@ -199,7 +193,6 @@ export default function Home() {
             >
               Criar Agora
             </button>
-            {/* NOVO: Botão Hambúrguer para Celular */}
             <button
               className="md:hidden text-gray-300 hover:text-white"
               onClick={() => setIsMobileMenuOpen(true)}
@@ -222,7 +215,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* NOVO: GAVETA DO MENU MOBILE */}
+      {/* GAVETA DO MENU MOBILE */}
       <div
         className={`fixed inset-0 bg-black/90 backdrop-blur-sm z-[80] transition-opacity duration-300 md:hidden ${isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         onClick={() => setIsMobileMenuOpen(false)}
@@ -324,11 +317,15 @@ export default function Home() {
                 key={`${item.category}-${item.id}-${item.size || "unico"}`}
                 className="flex gap-4 bg-[var(--background-card)] p-4 rounded-lg border border-[var(--border-color)]"
               >
-                <img
-                  src={item.img}
-                  className="w-20 h-20 object-contain bg-black rounded"
-                  alt={item.name}
-                />
+                <div className="relative w-20 h-20 shrink-0">
+                  <Image
+                    src={item.img}
+                    alt={item.name}
+                    width={80}
+                    height={80}
+                    className="object-contain bg-black rounded h-full w-full"
+                  />
+                </div>
                 <div className="flex-1">
                   <h4 className="text-white font-bold text-sm leading-tight">
                     {item.name}
@@ -400,7 +397,6 @@ export default function Home() {
       <main className="flex-grow">
         {view === "home" ? (
           <>
-            {/* LIGAMOS O HERO AO ESTÚDIO AQUI */}
             <Hero onOpenStudio={() => setView("studio")} />
 
             <div className="bg-[var(--primary-color)] text-[var(--background-dark)] py-3 overflow-hidden border-y border-[var(--primary-color)] relative z-10">
@@ -497,11 +493,14 @@ export default function Home() {
                       key={p.id}
                       className="min-w-[280px] md:min-w-[320px] bg-[var(--background-dark)] border border-[var(--border-color)] cursor-pointer snap-start flex-shrink-0 text-left rounded-lg overflow-hidden shadow-lg group/card"
                     >
+                      {/* OTIMIZAÇÃO: Container relativo + 'fill' para responsividade extrema */}
                       <div className="aspect-[4/5] overflow-hidden relative">
-                        <img
+                        <Image
                           src={p.img}
                           alt={p.name}
-                          className="object-cover w-full h-full group-hover/card:scale-110 transition-transform duration-700 opacity-90 group-hover/card:opacity-100"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover group-hover/card:scale-110 transition-transform duration-700 opacity-90 group-hover/card:opacity-100"
                         />
                         <div className="absolute top-4 right-4 bg-[var(--primary-color)] text-white text-[10px] font-black px-3 py-1 uppercase rounded-sm">
                           Drop
@@ -555,10 +554,12 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 auto-rows-[150px] md:auto-rows-[250px]">
                   <div className="col-span-2 row-span-2 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
-                    <img
-                      src="images/homersimpson.png"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    <Image
+                      src="/images/homersimpson.png"
                       alt="Streetwear Colorido"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute bottom-6 left-6">
                       <span className="bg-white text-[var(--secondary-color)] px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-md shadow-lg">
@@ -566,32 +567,44 @@ export default function Home() {
                       </span>
                     </div>
                   </div>
+
                   <div className="col-span-1 row-span-1 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
-                    <img
+                    <Image
                       src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=600&auto=format&fit=crop"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       alt="Camisa Branca"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
+
                   <div className="col-span-1 row-span-2 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
-                    <img
-                      src="images/bart.png"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    <Image
+                      src="/images/bart.png"
                       alt="Cores"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
+
                   <div className="col-span-1 row-span-1 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
-                    <img
+                    <Image
                       src="https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?q=80&w=600&auto=format&fit=crop"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       alt="Caneca"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   </div>
+
                   <div className="col-span-2 row-span-1 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
-                    <img
-                      src="images/bart.png"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    <Image
+                      src="/images/bart.png"
                       alt="Neon Lifestyle"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute bottom-4 right-4">
                       <span className="bg-[var(--accent-purple)] text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md">
@@ -599,11 +612,14 @@ export default function Home() {
                       </span>
                     </div>
                   </div>
+
                   <div className="col-span-2 row-span-1 relative group overflow-hidden bg-white rounded-xl shadow-md border border-gray-200">
-                    <img
+                    <Image
                       src="https://images.unsplash.com/photo-1499939667766-4afceb292d05?q=80&w=800&auto=format&fit=crop"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       alt="Urban Vibe"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute top-4 left-4">
                       <span className="bg-[var(--secondary-color)] text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-md">
@@ -635,10 +651,12 @@ export default function Home() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="max-w-sm mx-auto w-full bg-[var(--background-card)] rounded-xl overflow-hidden border border-[var(--border-color)] group hover:border-[var(--primary-color)] transition-colors">
                     <div className="h-56 w-full overflow-hidden relative">
-                      <img
-                        src="https://images.unsplash.com/photo-1528701202534-192e276f7ab3?q=80&w=600&auto=format&fit=crop"
+                      <Image
+                        src="https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?q=80&w=600&auto=format&fit=crop"
                         alt="Cliente 1"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
                       />
                       <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-lg">
                         <span className="text-yellow-400 text-[10px] tracking-widest">
@@ -665,10 +683,12 @@ export default function Home() {
 
                   <div className="max-w-sm mx-auto w-full bg-[var(--background-card)] rounded-xl overflow-hidden border border-[var(--border-color)] group hover:border-[var(--primary-color)] transition-colors">
                     <div className="h-56 w-full overflow-hidden relative">
-                      <img
+                      <Image
                         src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=600&auto=format&fit=crop"
                         alt="Cliente 2"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
                       />
                       <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-lg">
                         <span className="text-yellow-400 text-[10px] tracking-widest">
@@ -695,10 +715,12 @@ export default function Home() {
 
                   <div className="max-w-sm mx-auto w-full bg-[var(--background-card)] rounded-xl overflow-hidden border border-[var(--border-color)] group hover:border-[var(--primary-color)] transition-colors">
                     <div className="h-56 w-full overflow-hidden relative">
-                      <img
+                      <Image
                         src="https://images.unsplash.com/photo-1554568218-0f1715e72254?q=80&w=600&auto=format&fit=crop"
                         alt="Cliente 3"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
                       />
                       <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-lg">
                         <span className="text-yellow-400 text-[10px] tracking-widest">
@@ -756,9 +778,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-left">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <img
+              <Image
                 src="/images/logoestampasobmediasite.svg"
-                alt="Logo"
+                alt="Logo Estampa sob medida"
+                width={250}
+                height={100}
                 className="h-48 w-auto object-contain"
               />
             </div>
